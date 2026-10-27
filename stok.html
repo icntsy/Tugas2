@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stok Bahan Ajar - SITTA UT</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+</head>
+<body>
+  <div id="app" class="container">
+    <nav class="navbar">
+      <div class="logo">SITTA UT</div>
+      <div class="nav-links">
+        <a href="index.html">Dashboard</a>
+        <a href="stok.html" class="active">Stok Bahan Ajar</a>
+        <a href="tracking.html">Tracking DO</a>
+      </div>
+    </nav>
+
+    <h2>Informasi Stok Bahan Ajar</h2>
+
+    <!-- Filter & Sort -->
+    <div class="card">
+      <h3>Filter dan Pengurutan Data</h3>
+      <div class="filter-grid">
+        <div>
+          <label>UT-Daerah:</label>
+          <select v-model="filterUPBJJ">
+            <option value="">-- Semua UT-Daerah --</option>
+            <option v-for="upbjj in upbjjList" :value="upbjj">{{ upbjj }}</option>
+          </select>
+        </div>
+
+        <div v-if="filterUPBJJ">
+          <label>Kategori Mata Kuliah:</label>
+          <select v-model="filterKategori">
+            <option value="">-- Semua Kategori --</option>
+            <option v-for="kat in kategoriList" :value="kat">{{ kat }}</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Status Re-Order:</label>
+          <select v-model="filterReorder">
+            <option value="all">Semua Data</option>
+            <option value="reorder">Perlu Re-Order (Stok < Safety atau 0)</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Urutkan Berdasarkan:</label>
+          <select v-model="sortBy">
+            <option value="judul">Judul Mata Kuliah</option>
+            <option value="qty">Jumlah Stok (Qty)</option>
+            
+          </select>
+        </div>
+      </div>
+      <button @click="resetFilter" class="btn-reset">Reset Filter</button>
+    </div>
+
+    <!-- Form Tambah/Edit Stok -->
+  <!-- Form Tambah/Edit Stok -->
+    <div class="card">
+      <h3>{{ isEditing ? 'Edit Baris Stok' : 'Tambah Baris Stok Baru (DOM Manipulation)' }}</h3>
+      <form @submit.prevent="saveStok" class="form-grid">
+        <div>
+          <label>Kode Mata Kuliah:</label>
+          <input v-model="form.kode" placeholder="Contoh: EKMA4116" required>
+        </div>
+        <div>
+          <label>Nama / Judul Mata Kuliah:</label>
+          <input v-model="form.judul" placeholder="Nama Mata Kuliah" required>
+        </div>
+        <div>
+          <label>Kategori Mata Kuliah:</label>
+          <select v-model="form.kategori" required>
+            <option value="">-- Pilih Kategori --</option>
+            <option v-for="kat in kategoriList" :value="kat">{{ kat }}</option>
+          </select>
+        </div>
+        <div>
+          <label>UT-Daerah:</label>
+          <select v-model="form.upbjj" required>
+            <option value="">-- Pilih UT-Daerah --</option>
+            <option v-for="upbjj in upbjjList" :value="upbjj">{{ upbjj }}</option>
+          </select>
+        </div>
+        <div>
+          <label>Lokasi Rak:</label>
+          <input v-model="form.lokasiRak" placeholder="Cth: R1-A3" required>
+        </div>
+        <div>
+          <label>Jumlah Stok Bahan Ajar:</label>
+          <input type="number" v-model.number="form.qty" min="0" required>
+        </div>
+        <div>
+          <label>Jumlah Stok Safety Bahan Ajar:</label>
+          <input type="number" v-model.number="form.safety" min="0" required>
+        </div>
+       
+        <div style="grid-column: span 2;">
+          <label>Catatan (HTML):</label>
+          <input v-model="form.catatanHTML" placeholder="Cth: Edisi Revisi">
+        </div>
+
+       <div style="grid-column: 1 / -1; display: flex; gap: 10px; margin-top: 10px;">
+          <button type="submit" class="btn-submit" style="padding: 10px 25px; width: auto; cursor: pointer;">{{ isEditing ? 'Simpan Perubahan' : 'Tambah Stok' }}</button>
+          <button type="button" v-if="isEditing" @click="cancelEdit" class="btn-cancel" style="padding: 10px 25px; width: auto; cursor: pointer;">Batal</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Tabel Data Stok -->
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th style="width: 15%;">Kode / Judul</th>
+          <th>Kategori Mata Kuliah</th>
+          <th>UT-Daerah</th>
+          <th>Lokasi Rak</th>
+          <th>Jumlah Stok Bahan Ajar</th>
+          <th>Jumlah Stok Safety Bahan Ajar</th>
+          <th>Status</th>
+          <th>Catatan</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(item, index) in filteredStok" :key="item.kode">
+          <td style="width: 15%; word-break: break-word;"><b>{{ item.kode }}</b><br>{{ item.judul }}</td>
+          <td>{{ item.kategori }}</td>
+          <td>{{ item.upbjj }}</td>
+          <td>{{ item.lokasiRak }}</td>
+          <td>{{ item.qty }}</td>
+          <td>{{ item.safety }}</td>
+          <td>
+            <span :class="getStatusClass(item)">
+              {{ getStatusText(item) }}
+            </span>
+          </td>
+          <td v-html="item.catatanHTML"></td>
+          <td>
+            <button @click="editItem(item)" class="btn-edit">Edit</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script src="js/dataBahanAjar.js"></script>
+  <script src="js/stok-app.js"></script>
+</body>
+</html>
+

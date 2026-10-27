@@ -1,0 +1,105 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f6f9;
+  margin: 0;
+  padding: 10px 20px;
+}
+
+.container {
+  width: 100%;
+  max-width: 100%; /* Membuat kontainer melebar penuh */
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #2c3e50;
+  padding: 15px 25px;
+  color: white;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  margin-left: 15px;
+}
+
+.navbar a.active {
+  font-weight: bold;
+  border-bottom: 2px solid #3498db;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+.filter-grid, .form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+input, select, button {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.disabled-input {
+  background-color: #e9ecef;
+}
+
+.btn-submit { background: #27ae60; color: white; border: none; cursor: pointer; }
+.btn-reset { background: #e74c3c; color: white; border: none; cursor: pointer; width: auto; }
+.btn-edit { background: #f39c12; color: white; border: none; cursor: pointer; }
+.btn-cancel { background: #7f8c8d; color: white; border: none; cursor: pointer; }
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+.data-table th, .data-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+.data-table th { background-color: #34495e; color: white; }
+
+.status-aman { color: #27ae60; font-weight: bold; }
+.status-menipis { color: #e67e22; font-weight: bold; }
+.status-kosong { color: #c0392b; font-weight: bold; }
+
+.detail-box {
+  grid-column: span 2;
+  background: #f8f9fa;
+  padding: 10px;
+  border-left: 4px solid #3498db;
+}
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  table-layout: fixed; /* Kunci agar lebar kolom mematuhi persentase yang ditentukan */
+}
+
+.data-table th, .data-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+  word-wrap: break-word; /* Mencegah teks panjang merusak tata letak */
+}

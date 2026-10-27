@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - SITTA UT</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+</head>
+<body>
+  <div id="app" class="container">
+    <nav class="navbar">
+      <div class="logo">SITTA UT</div>
+      <div class="nav-links">
+        <a href="index.html" class="active">Dashboard</a>
+        <a href="stok.html">Stok Bahan Ajar</a>
+        <a href="tracking.html">Tracking DO</a>
+      </div>
+    </nav>
+
+    <div class="card" style="text-align: center; padding: 40px;">
+      <h2>Selamat Datang di Aplikasi SITTA UT</h2>
+      <p>Sistem Pemesanan dan Tracking Bahan Ajar Universitas Terbuka berbasis</p>
+      <div style="margin-top: 20px;">
+        <a href="stok.html" class="btn-submit" style="padding: 10px 20px; text-decoration: none; display: inline-block; margin-right: 10px;">Kelola Stok Bahan Ajar</a>
+        <a href="tracking.html" class="btn-edit" style="padding: 10px 20px; text-decoration: none; display: inline-block;">Tracking Delivery Order</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/dataBahanAjar.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data: sharedData
+    });
+  </script>
+</body>
+</html>
+
